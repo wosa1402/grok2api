@@ -80,6 +80,11 @@ const LOCALE_MAP = {
     "stream_timeout": { title: "流空闲超时", desc: "流式空闲超时时间（秒）。" }
   },
 
+  "deepsearch": {
+    "label": "DeepSearch 配置",
+    "workspace_id": { title: "Workspace ID", desc: "用于开启 Grok DeepSearch 的 workspaceIds 值。" }
+  },
+
 
   "video": {
     "label": "视频配置",

@@ -25,7 +25,8 @@ thinking = true
 # 是否动态生成 Statsig 指纹
 dynamic_statsig = true
 # 过滤的特殊标签列表
-filter_tags = ["xaiartifact","xai:tool_usage_card","grok:render"]
+# 注意：如果你希望隐藏 DeepSearch Expert 的内联引用标签，可手动添加 "grok:render"
+filter_tags = ["xaiartifact","xai:tool_usage_card"]
 # Tool call 模式: "prompt" (默认, 提示词模拟) 或 "passthrough" (实验性, 使用 toolOverrides)
 tool_call_mode = "prompt"
 
@@ -164,3 +165,8 @@ concurrent = 100
 batch_size = 50
 # Usage 请求超时时间（秒）
 timeout = 60
+
+# ==================== DeepSearch 配置 ====================
+[deepsearch]
+# DeepSearch workspace ID（用于开启 Grok 网页端 DeepSearch 能力）
+workspace_id = "1735c097-cfe2-42ec-809d-b2cd8e806e9d"

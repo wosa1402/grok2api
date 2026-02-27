@@ -114,6 +114,14 @@ docker compose up -d
 
 <br>
 
+## DeepSearch（模型变体）
+
+- 通过在模型名末尾追加 `-deepsearch` 启用 DeepSearch：例如 `grok-4.1-fast-deepsearch`、`grok-4.20-beta-deepsearch`。
+- DeepSearch 依赖 `deepsearch.workspace_id` 配置项（可在管理面板配置管理或 `config.toml` 中设置），默认值见 `config.defaults.toml`。
+- 默认会保留 Expert 模式的内联引用标签（`<grok:render ...>`）；如果你想隐藏它，可在 `app.filter_tags` 中添加 `grok:render`。
+
+<br>
+
 ## 接口说明
 
 ### `POST /v1/chat/completions`

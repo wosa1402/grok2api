@@ -263,6 +263,7 @@ class GrokChatService:
         file_attachments: List[str] = None,
         tool_overrides: Dict[str, Any] = None,
         model_config_override: Dict[str, Any] = None,
+        workspace_ids: List[str] | None = None,
     ):
         """发送聊天请求"""
         if stream is None:
@@ -286,6 +287,7 @@ class GrokChatService:
                 file_attachments=file_attachments,
                 tool_overrides=tool_overrides,
                 model_config_override=model_config_override,
+                workspace_ids=workspace_ids,
             )
             logger.info(f"Chat connected: model={model}, stream={stream}")
         except Exception:
@@ -325,6 +327,14 @@ class GrokChatService:
 
         grok_model = model_info.grok_model
         mode = model_info.model_mode
+        workspace_ids = None
+        if model_info.is_deepsearch:
+            workspace_id = str(get_config("deepsearch.workspace_id") or "").strip()
+            if not workspace_id:
+                raise ValidationException(
+                    "DeepSearch workspace_id 未配置，请设置配置项 deepsearch.workspace_id"
+                )
+            workspace_ids = [workspace_id]
         # 提取消息和附件
         message, file_attachments, image_attachments = MessageExtractor.extract(
             messages, tools=tools, tool_choice=tool_choice, parallel_tool_calls=parallel_tool_calls
@@ -377,6 +387,7 @@ class GrokChatService:
             file_attachments=all_attachments,
             tool_overrides=tool_overrides_payload,
             model_config_override=model_config_override,
+            workspace_ids=workspace_ids,
         )
 
         return response, stream, model
@@ -965,7 +976,8 @@ class CollectProcessor(proc_base.BaseProcessor):
                             card_id = match.group(1)
                             item = card_map.get(card_id)
                             if not item:
-                                return ""
+                                # 未知 card_id（例如 DeepSearch 的 citation_card）保留原始标签
+                                return match.group(0)
                             title, original = item
                             title_safe = title.replace("\n", " ").strip() or "image"
                             prefix = ""

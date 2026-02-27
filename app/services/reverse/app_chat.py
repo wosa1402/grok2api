@@ -27,6 +27,7 @@ class AppChatReverse:
         file_attachments: List[str] = None,
         tool_overrides: Dict[str, Any] = None,
         model_config_override: Dict[str, Any] = None,
+        workspace_ids: Optional[List[str]] = None,
     ) -> Dict[str, Any]:
         """Build chat payload for Grok app-chat API."""
 
@@ -71,6 +72,9 @@ class AppChatReverse:
         if model_config_override:
             payload["responseMetadata"]["modelConfigOverride"] = model_config_override
 
+        if workspace_ids:
+            payload["workspaceIds"] = workspace_ids
+
         return payload
 
     @staticmethod
@@ -83,6 +87,7 @@ class AppChatReverse:
         file_attachments: List[str] = None,
         tool_overrides: Dict[str, Any] = None,
         model_config_override: Dict[str, Any] = None,
+        workspace_ids: Optional[List[str]] = None,
     ) -> Any:
         """Send app chat request to Grok.
         
@@ -120,6 +125,7 @@ class AppChatReverse:
                 file_attachments=file_attachments,
                 tool_overrides=tool_overrides,
                 model_config_override=model_config_override,
+                workspace_ids=workspace_ids,
             )
 
             # Curl Config
