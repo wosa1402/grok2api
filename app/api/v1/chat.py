@@ -583,7 +583,7 @@ def validate_request(request: ChatCompletionRequest):
                 param="messages",
                 code="empty_prompt",
             )
-        image_conf = _imagine_fast_server_image_config() if request.model == IMAGINE_FAST_MODEL_ID else (request.image_config or ImageConfig())
+        image_conf = _imagine_fast_server_image_config() if request.model.startswith(IMAGINE_FAST_MODEL_ID) else (request.image_config or ImageConfig())
         n = image_conf.n or 1
         if not (1 <= n <= 10):
             raise ValidationException(
@@ -757,7 +757,7 @@ async def chat_completions(request: ChatCompletionRequest):
         is_stream = (
             request.stream if request.stream is not None else get_config("app.stream")
         )
-        image_conf = _imagine_fast_server_image_config() if request.model == IMAGINE_FAST_MODEL_ID else (request.image_config or ImageConfig())
+        image_conf = _imagine_fast_server_image_config() if request.model.startswith(IMAGINE_FAST_MODEL_ID) else (request.image_config or ImageConfig())
         _validate_image_config(image_conf, stream=bool(is_stream))
         response_format = _resolve_image_format(image_conf.response_format)
         response_field = _image_field(response_format)
@@ -770,7 +770,7 @@ async def chat_completions(request: ChatCompletionRequest):
             "1024x1792": "2:3",
             "1024x1024": "1:1",
         }
-        aspect_ratio = aspect_ratio_map.get(size, "2:3")
+        aspect_ratio = model_info.aspect_ratio or aspect_ratio_map.get(size, "2:3")
 
         token_mgr = await get_token_manager()
         await token_mgr.reload_if_stale()

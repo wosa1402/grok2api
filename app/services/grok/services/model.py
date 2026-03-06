@@ -37,6 +37,7 @@ class ModelInfo(BaseModel):
     is_image_edit: bool = False
     is_video: bool = False
     is_deepsearch: bool = False
+    aspect_ratio: Optional[str] = None
 
 
 class ModelService:
@@ -371,6 +372,32 @@ class ModelService:
     ]
 
     _map = {m.model_id: m for m in MODELS}
+
+    # -------------------- 图片比例变体（自动生成） --------------------
+    _ASPECT_RATIOS = {
+        "1-1": "1:1",
+        "2-3": "2:3",
+        "3-2": "3:2",
+        "9-16": "9:16",
+        "16-9": "16:9",
+    }
+    for _base in list(_map.values()):
+        if _base.is_image:
+            for _suffix, _ratio in _ASPECT_RATIOS.items():
+                _variant_id = f"{_base.model_id}-{_suffix}"
+                _map[_variant_id] = ModelInfo(
+                    model_id=_variant_id,
+                    grok_model=_base.grok_model,
+                    model_mode=_base.model_mode,
+                    tier=_base.tier,
+                    cost=_base.cost,
+                    display_name=f"{_base.display_name} ({_ratio})",
+                    description=_base.description,
+                    is_image=True,
+                    is_image_edit=False,
+                    is_video=False,
+                    aspect_ratio=_ratio,
+                )
 
     @classmethod
     def get(cls, model_id: str) -> Optional[ModelInfo]:

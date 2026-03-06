@@ -127,17 +127,10 @@ def _validate_common_request(
 
 def validate_generation_request(request: ImageGenerationRequest):
     """验证图片生成请求参数"""
-    if request.model != "grok-imagine-1.0":
-        raise ValidationException(
-            message="The model `grok-imagine-1.0` is required for image generation.",
-            param="model",
-            code="model_not_supported",
-        )
-    # 验证模型 - 通过 is_image 检查
     model_info = ModelService.get(request.model)
     if not model_info or not model_info.is_image:
         # 获取支持的图片模型列表
-        image_models = [m.model_id for m in ModelService.MODELS if m.is_image]
+        image_models = [m.model_id for m in ModelService.list() if m.is_image]
         raise ValidationException(
             message=(
                 f"The model `{request.model}` is not supported for image generation. "
@@ -277,7 +270,7 @@ async def create_image(request: ImageGenerationRequest):
     # 获取 token 和模型信息
     token_mgr, token = await _get_token(request.model)
     model_info = ModelService.get(request.model)
-    aspect_ratio = resolve_aspect_ratio(request.size)
+    aspect_ratio = model_info.aspect_ratio or resolve_aspect_ratio(request.size)
 
     result = await ImageGenerationService().generate(
         token_mgr=token_mgr,
