@@ -100,6 +100,17 @@ enable_auto_clean = true
 # 缓存大小上限（MB）
 limit_mb = 512
 
+# ==================== WebDAV 备份配置 ====================
+[webdav]
+# 是否启用 WebDAV 备份上传
+enabled = false
+# WebDAV 服务地址（例如 https://dav.example.com/backup）
+url = ""
+# WebDAV 用户名
+username = ""
+# WebDAV 密码
+password = ""
+
 # ==================== 对话配置 ====================
 [chat]
 # Reverse 接口并发上限

@@ -107,6 +107,9 @@ async def lifespan(app: FastAPI):
     if StorageFactory._instance:
         await StorageFactory._instance.close()
 
+    from app.services.grok.utils.webdav import WebDAVUploader
+    await WebDAVUploader.get_instance().close()
+
     if refresh_enabled:
         scheduler = get_scheduler()
         scheduler.stop()

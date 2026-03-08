@@ -18,6 +18,7 @@ from app.core.logger import logger
 from app.core.storage import DATA_DIR
 from app.core.config import get_config
 from app.core.exceptions import AppException
+from app.services.grok.utils.webdav import webdav_backup
 from app.services.reverse.assets_download import AssetsDownloadReverse
 from app.services.reverse.utils.session import ResettableSession
 from app.services.grok.utils.locks import _get_download_semaphore, _file_lock
@@ -224,6 +225,7 @@ class DownloadService:
                     "content-type", "application/octet-stream"
                 ).split(";")[0]
                 logger.info(f"Downloaded: {file_path}")
+                webdav_backup(cache_path, media_type)
 
                 asyncio.create_task(self._check_limit())
 

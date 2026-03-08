@@ -13,6 +13,7 @@ from typing import Any, AsyncGenerator, AsyncIterable, Dict, List, Optional, Uni
 import orjson
 
 from app.core.config import get_config
+from app.services.grok.utils.webdav import webdav_backup
 from app.core.logger import logger
 from app.core.storage import DATA_DIR
 from app.core.exceptions import AppException, ErrorType, UpstreamException
@@ -472,6 +473,8 @@ class ImageWSBaseProcessor(BaseProcessor):
                 f.write(base64.b64decode(data))
 
         await asyncio.to_thread(_write_file)
+        if is_final:
+            webdav_backup(filepath, "image")
         return self._build_file_url(filename)
 
     def _pick_best(self, existing: Optional[Dict], incoming: Dict) -> Dict:
