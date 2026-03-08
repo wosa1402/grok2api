@@ -63,10 +63,10 @@ class AppChatReverse:
             "deviceEnvInfo": {
                 "darkModeEnabled": False,
                 "devicePixelRatio": 2,
-                "screenWidth": 2056,
                 "screenHeight": 1329,
-                "viewportWidth": 2056,
+                "screenWidth": 2056,
                 "viewportHeight": 1083,
+                "viewportWidth": 2056,
             },
             "disableMemory": get_config("app.disable_memory"),
             "disableSearch": False,
@@ -95,6 +95,9 @@ class AppChatReverse:
             "toolOverrides": tool_overrides or {},
         }
 
+        if model == "grok-420":
+            payload["enable420"] = True
+
         custom_personality = AppChatReverse._resolve_custom_personality()
         if custom_personality is not None:
             payload["customPersonality"] = custom_personality
@@ -104,6 +107,9 @@ class AppChatReverse:
 
         if workspace_ids:
             payload["workspaceIds"] = workspace_ids
+
+        import json
+        logger.debug(f"AppChatReverse payload: {json.dumps(payload, indent=4, ensure_ascii=False)}")
 
         return payload
 
