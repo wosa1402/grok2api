@@ -215,18 +215,6 @@ class ModelService:
             is_deepsearch=True,
         ),
         ModelInfo(
-            model_id="grok-4-mini-deepsearch",
-            grok_model="grok-4-mini",
-            model_mode="MODEL_MODE_GROK_4_MINI_THINKING",
-            tier=Tier.BASIC,
-            cost=Cost.LOW,
-            display_name="GROK-4-MINI-DEEPSEARCH",
-            is_image=False,
-            is_image_edit=False,
-            is_video=False,
-            is_deepsearch=True,
-        ),
-        ModelInfo(
             model_id="grok-4-thinking-deepsearch",
             grok_model="grok-4",
             model_mode="MODEL_MODE_GROK_4_THINKING",
